@@ -1,0 +1,18 @@
+﻿  board.cpp
+C:\Users\melor\Desktop\Coding\C_C++\Chess\board.cpp(84,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Chess.cpp
+C:\Users\melor\Desktop\Coding\C_C++\Chess\game.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  (compiling source file 'Chess.cpp')
+  
+  game.cpp
+C:\Users\melor\Desktop\Coding\C_C++\Chess\game.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  (compiling source file 'game.cpp')
+  
+  imageUtil.cpp
+  piece.cpp
+  pieces.cpp
+  position.cpp
+  Generating Code...
+  Chess.vcxproj -> C:\Users\melor\Desktop\Coding\C_C++\Chess\x64\Debug\Chess.exe
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.
