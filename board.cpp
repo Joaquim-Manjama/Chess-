@@ -270,6 +270,7 @@ Piece& Board::GetPiece(Position position) {
 	return *pieces[0];
 }
 
+// Check if tile can be moved to
 bool Board::PossibleTile(int row, int column)
 {
 	for (Position position : possibleTiles)
@@ -283,13 +284,15 @@ bool Board::PossibleTile(int row, int column)
 	return false;
 }
 
+// Erase Possible tiles stored
 void Board::RemovePossibleTiles()
 {
 	possibleTiles = {};
 	selectedTile = Position();
 }
 
-void Board::MovePiece(int row, int column)
+// Move a piece in the board
+bool Board::MovePiece(int row, int column)
 {
 	Position newPosition(row, column);
 
@@ -308,9 +311,56 @@ void Board::MovePiece(int row, int column)
 	{
 		if (piece->position.Display() == currentPiece.position.Display())
 		{
+			// Castle King Side
+			if (piece->type == "KING" && newPosition.column == piece->position.column + 2)
+			{
+				Castle(piece->position.row, piece->position.column + 3, -2);
+			}
+
+			// Castle Queen Side
+			if (piece->type == "KING" && newPosition.column == piece->position.column - 2)
+			{
+				Castle(piece->position.row, piece->position.column - 4, 3);
+			}
 			piece->Move(newPosition);
 			break;
 		}
+	}
+
+	InitializeBoard();
+	LockPieces();
+
+	return true;
+}
+
+// Castle the king by moving rook
+void Board::Castle(int row, int column, int move)
+{
+	Position newPosition = Position(row, column);
+
+	for (auto& piece : pieces)
+	{
+		if (piece->position.Display() == newPosition.Display())
+		{
+			newPosition.column += move;
+
+			if (!piece->hasMoved)
+			{
+				piece->Move(newPosition);
+			}
+		}
+	}
+}
+
+// Flip the Board 
+// Currently not being used
+void Board::FlipBoard()
+{
+	// FLIP PIECES
+	for (auto& piece : pieces)
+	{
+		piece->position.row = 7 - piece->position.row;
+		piece->position.column = 7 - piece->position.column;
 	}
 
 	InitializeBoard();

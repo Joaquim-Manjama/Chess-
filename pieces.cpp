@@ -51,7 +51,7 @@ public:
 						tiles.push_back(Position(position.row - (i + 1), position.column));
 					}
 
-					if (OppositePiece(board, position.row - 2, position.column))
+					if ((board[position.row - 2][position.column] != 0))
 					{
 						break;
 					}
@@ -66,7 +66,7 @@ public:
 						tiles.push_back(Position(position.row + (i + 1), position.column));
 					}
 
-					if (OppositePiece(board, position.row + 2, position.column))
+					if ((board[position.row + 2][position.column] != 0))
 					{
 						break;
 					}
@@ -546,8 +546,80 @@ public:
 			}
 		}
 
+		// CASTLES
+		if (!hasMoved)
+		{
+			// KING SIDE
+			if (CanCastleKingSide(board))
+			{
+				tiles.push_back(Position(position.row, position.column + 2));
+			}
+
+			// QUEEN SIDE
+			if (CanCastleQueenSide(board))
+			{
+				tiles.push_back(Position(position.row, position.column - 2));
+			}
+		}
+
 
 		return tiles;
+	}
+
+	// Check if King Can Castle King Side
+	bool CanCastleKingSide(int board[8][8])
+	{
+		std::string white = "WHITE";
+
+		if (true)//colour == white)
+		{
+			if (board[position.row][position.column + 1] == board[position.row][position.column + 2] && board[position.row][position.column + 1] == 0)
+			{
+				if (abs(board[position.row][position.column + 3]) == 4 && !OppositePiece(board, position.row, position.column + 3))
+				{
+					return true;
+				}
+			}
+		}
+		/*else
+		{
+			if (board[position.row][position.column - 1] == board[position.row][position.column - 2] && board[position.row][position.column - 1] == 0)
+			{
+				if (abs(board[position.row][position.column - 3]) == 4 && !OppositePiece(board, position.row, position.column - 3))
+				{
+					return true;
+				}
+			}
+		}*/
+		return false;
+	}
+
+	// Check if King Can Castle Queen Side
+	bool CanCastleQueenSide(int board[8][8])
+	{
+		std::string white = "WHITE";
+
+		if (true)//colour == white)
+		{
+			if (board[position.row][position.column - 1] == board[position.row][position.column - 2] && board[position.row][position.column - 2] == board[position.row][position.column - 3] && board[position.row][position.column - 3] == 0)
+			{
+				if (abs(board[position.row][position.column - 4]) == 4 && !OppositePiece(board, position.row, position.column - 4))
+				{
+					return true;
+				}
+			}
+		}
+		/*else
+		{
+			if (board[position.row][position.column + 1] == board[position.row][position.column + 2] && board[position.row][position.column + 2] == board[position.row][position.column + 3] && board[position.row][position.column + 3] == 0)
+			{
+				if (abs(board[position.row][position.column + 4]) == 4 && !OppositePiece(board, position.row, position.column + 4))
+				{
+					return true;
+				}
+			}
+		}*/
+		return false;
 	}
 };
 

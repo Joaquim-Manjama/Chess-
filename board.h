@@ -17,12 +17,14 @@ public:
 	Piece& GetPiece(Position position);
 	bool PossibleTile(int row, int column);
 	void RemovePossibleTiles();
-	void MovePiece(int row, int column);
+	bool MovePiece(int row, int column);
+	void FlipBoard();
 private:	
 	void Initialize();
 	void InitPiece(std::vector<Position> positions, int id);
 	void InitPieces();
 	void InitializeBoard();
+	void Castle(int row, int column, int move);
 	int rows;
 	int columns;
 	int cellSize;

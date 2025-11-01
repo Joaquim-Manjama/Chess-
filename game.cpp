@@ -37,8 +37,11 @@ void Game::SelectTile(int row, int column)
 	{
 		if (board.PossibleTile(row, column))
 		{
-			board.MovePiece(row, column);
-			turn = !turn;
+			if (board.MovePiece(row, column));
+			{
+				turn = !turn;
+				//board.FlipBoard();
+			}
 		}
 		else {
 			gameStatus = 0;
