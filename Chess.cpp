@@ -2,7 +2,6 @@
 #include <raylib.h>
 #include "game.h"
 
-
 // Main Game function
 int main()
 {
@@ -12,7 +11,7 @@ int main()
 
 	Game game = Game();
 	game.PrintBoard();
-
+	
 	// Game Loop
 	while (WindowShouldClose() == false)
 	{

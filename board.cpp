@@ -191,6 +191,12 @@ void Board::Draw(int row, int column)
 		DrawRectangle(tile.column * cellSize + offset, tile.row * cellSize + offset, cellSize - (offset * 2), cellSize - (offset * 2), GREEN);
 	}
 
+	// Danger Tile
+	for (Position tile : dangerTiles)
+	{
+		DrawRectangle(tile.column * cellSize + offset, tile.row * cellSize + offset, cellSize - (offset * 2), cellSize - (offset * 2), RED);
+	}
+
 	// Cursor Tile
 	DrawRectangle(column * cellSize + offset, row * cellSize + offset, cellSize - (offset * 2), cellSize - (offset * 2), Color {255, 255, 255, 133});
 
@@ -229,6 +235,8 @@ bool Board::SelectTile(Position position, bool turn)
 {
 	selectedTile = Position();
 	possibleTiles = {};
+	dangerTiles = {};
+	std::string king = "KING";
 	
 	if (PiecePresent(position))
 	{
@@ -238,6 +246,13 @@ bool Board::SelectTile(Position position, bool turn)
 		{
 			selectedTile = position;
 			possibleTiles = GetPiece(position).GetPossibleTiles(board);
+
+			if (currentPiece.type == king)
+			{
+				RemoveAttackedSquares(turn);
+			}
+
+			dangerTiles = GetDangerTiles(turn);
 
 			return true;
 		}
@@ -288,6 +303,7 @@ bool Board::PossibleTile(int row, int column)
 void Board::RemovePossibleTiles()
 {
 	possibleTiles = {};
+	dangerTiles = {};
 	selectedTile = Position();
 }
 
@@ -350,6 +366,86 @@ void Board::Castle(int row, int column, int move)
 			}
 		}
 	}
+}
+
+std::vector<Position> Board::GetDangerTiles(bool turn)
+{
+	std::vector<Position> tiles = {};
+	std::string white = "WHITE";
+
+	for (auto& tile : possibleTiles)
+	{
+		if (PiecePresent(tile))
+		{
+			if (GetPiece(tile).colour == white && !turn)
+			{
+				tiles.push_back(tile);
+			}
+
+			if (GetPiece(tile).colour != white && turn)
+			{
+				tiles.push_back(tile);
+			}
+		}
+	}
+	return tiles;
+}
+
+bool Board::SquareUnderAttack(Position position, bool turn)
+{
+	std::vector<Position> tiles = {};
+	std::vector<Position> dummyTiles = {};
+	std::string colour = "WHITE";
+
+	for (auto& piece : pieces)
+	{
+		if (piece->colour == colour && !turn)
+		{
+			dummyTiles = piece->GetPossibleTiles(board);
+			tiles.insert(tiles.end(), dummyTiles.begin(), dummyTiles.end());
+		}
+
+		if (piece->colour != colour && turn)
+		{
+			dummyTiles = piece->GetPossibleTiles(board);
+			tiles.insert(tiles.end(), dummyTiles.begin(), dummyTiles.end());
+		}
+	}
+
+	for (auto& tile: tiles)
+	{
+		if (tile.Display() == position.Display())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void Board::RemoveAttackedSquares(bool turn)
+{
+	for (auto& position : possibleTiles)
+	{
+		if (SquareUnderAttack(position, turn))
+		{
+			possibleTiles.erase(
+				std::remove_if(
+					possibleTiles.begin(),
+					possibleTiles.end(),
+					[&](const Position& pos) {
+						return pos.row == position.row && pos.column == position.column;
+					}
+				),
+				possibleTiles.end()
+			);
+		}
+	}
+}
+
+void Board::RemoveCastlingRights()
+{
+
 }
 
 // Flip the Board 
